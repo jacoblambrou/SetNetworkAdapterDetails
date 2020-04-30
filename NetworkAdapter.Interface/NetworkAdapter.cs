@@ -2,19 +2,22 @@
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace NetworkAdapter.Library
 {
     public class NetworkAdapter : INetworkAdapter
     {
-        public string AdapterName { get; set; } = string.Empty;
-        public string AdapterDescription { get; set; } = string.Empty;
-        public string AdapterType { get; set; } = string.Empty;
-        public string AdapterStatus { get; set; } = string.Empty;
+        public string Id { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string Type { get; set; } = string.Empty;
+        public string Status { get; set; } = string.Empty;
         public string IpAddress { get; set; } = string.Empty;
         public string SubnetMask { get; set; } = string.Empty;
         public string DefaultGateway { get; set; } = string.Empty;
         public string DnsServers { get; set; } = string.Empty;
+        public string MacAddress { get; set; } = string.Empty;
 
         public NetworkAdapter()
         {
@@ -23,14 +26,21 @@ namespace NetworkAdapter.Library
 
         public NetworkAdapter(NetworkInterface nic)
         {
-            this.AdapterName = GetAdapterName(nic);
-            this.AdapterDescription = GetAdapterDescription(nic);
-            this.AdapterType = GetAdapterType(nic);
-            this.AdapterStatus = GetAdapterStatus(nic);
+            this.Name = GetAdapterName(nic);
+            this.Description = GetAdapterDescription(nic);
+            this.Type = GetAdapterType(nic);
+            this.Status = GetAdapterStatus(nic);
             this.IpAddress = GetIpAddress(nic);
             this.SubnetMask = GetSubnetMask(nic);
             this.DefaultGateway = GetDefaultGateway(nic);
             this.DnsServers = GetDnsServers(nic);
+            this.Id = GetAdapterId(nic);
+            this.MacAddress = GetMacAddress(nic);
+        }
+
+        public string GetAdapterId(NetworkInterface nic)
+        {
+            return nic.Id.ToString();       // .Trim('{').Trim('}');
         }
 
         public string GetAdapterName(NetworkInterface nic)
@@ -95,7 +105,7 @@ namespace NetworkAdapter.Library
             foreach (IPAddress dnsServer in nic.GetIPProperties().DnsAddresses)
             {
                 if (dnsServer.AddressFamily == AddressFamily.InterNetwork)
-                    dnsServers += $"{dnsServer}\r\n                          ";
+                    dnsServers += $"{dnsServer}\r\n                          ";       // Add to string, if multiple servers exist, add on new line inline with 1st server
             }
             if (dnsServers.Length > 2)      // Check if DNS server(s) exist
             {
@@ -105,19 +115,27 @@ namespace NetworkAdapter.Library
             return "Not set";
         }
 
+        public string GetMacAddress(NetworkInterface nic)
+        {
+            string mac = nic.GetPhysicalAddress().ToString();
+            return Regex.Replace(mac,".{2}","$0-").Trim('-');       // Insert - every 2 characters, then trim - from either end
+        }
+
         
         public string DisplayAdapterInfo()
         {
             StringBuilder adapterBuilder = new StringBuilder();
-            adapterBuilder.Append($"Name. . . . . . . . . . : {AdapterName}\r\n");
-            adapterBuilder.Append($"Description . . . . . . : {AdapterDescription}\r\n");
-            adapterBuilder.Append($"Type. . . . . . . . . . : {AdapterType}\r\n");
-            adapterBuilder.Append($"Status. . . . . . . . . : {AdapterStatus}\r\n");
+            adapterBuilder.Append($"Name. . . . . . . . . . : {Name}\r\n");
+            adapterBuilder.Append($"Description . . . . . . : {Description}\r\n");
+            adapterBuilder.Append($"Type. . . . . . . . . . : {Type}\r\n");
+            adapterBuilder.Append($"Status. . . . . . . . . : {Status}\r\n");
             adapterBuilder.Append($"IP Address. . . . . . . : {IpAddress}\r\n");
             adapterBuilder.Append($"Subnet Mask . . . . . . : {SubnetMask}\r\n");
             adapterBuilder.Append($"Default Gateway . . . . : {DefaultGateway}\r\n");
             adapterBuilder.Append($"DNS Servers . . . . . . : {DnsServers}\r\n");
-            
+            adapterBuilder.Append($"MAC Address . . . . . . : {MacAddress}\r\n"); 
+            adapterBuilder.Append($"Id. . . . . . . . . . . : {Id}\r\n");
+
             return adapterBuilder.ToString();
         }
 
@@ -132,21 +150,18 @@ namespace NetworkAdapter.Library
             adapterBuilder.Append($"Subnet Mask . . . . . . : {GetSubnetMask(nic)}\r\n");
             adapterBuilder.Append($"Default Gateway . . . . : {GetDefaultGateway(nic)}\r\n");
             adapterBuilder.Append($"DNS Server. . . . . . . : {GetDnsServers(nic)}\r\n");
-            
+            adapterBuilder.Append($"MAC Address . . . . . . : {GetMacAddress(nic)}\r\n");
+            adapterBuilder.Append($"Id. . . . . . . . . . . : {GetAdapterId(nic)}\r\n");
+
             return adapterBuilder.ToString();
-        }
-        
-        public string DisplayAdapterInfo(NetworkInterface nic, bool showDisconnectedInterfaces)
-        {
-            return "";
         }
 
         public override string ToString()
         {
-            if (string.IsNullOrWhiteSpace(AdapterName))
+            if (string.IsNullOrWhiteSpace(Name))
                 return "Adapter must have a name";
 
-            return string.Format(AdapterName);
+            return string.Format(Name);
         }
     }
 }

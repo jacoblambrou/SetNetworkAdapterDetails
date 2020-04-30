@@ -24,7 +24,7 @@ namespace NetworkAdapter.Cmd
                 foreach (NetworkInterface nic in nics)
                 {
                     var adapter = new NetworkAdapter.Library.NetworkAdapter(nic);
-                    if (adapter.AdapterStatus == "Up")
+                    if (adapter.Status == "Up")
                         Console.WriteLine(adapter.DisplayAdapterInfo());
                 }
             }

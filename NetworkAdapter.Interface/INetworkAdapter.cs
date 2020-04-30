@@ -8,10 +8,10 @@ namespace NetworkAdapter.Library
 {
     public interface INetworkAdapter
     {
-        string AdapterName { get; set; }
-        string AdapterDescription { get; set; }
-        string AdapterType { get; set; }
-        string AdapterStatus { get; set; }
+        string Name { get; set; }
+        string Description { get; set; }
+        string Type { get; set; }
+        string Status { get; set; }
         string IpAddress { get; set; }
         string SubnetMask { get; set; }
         string DefaultGateway { get; set; }
