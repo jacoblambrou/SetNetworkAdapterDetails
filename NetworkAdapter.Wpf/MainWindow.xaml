@@ -4,9 +4,138 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NetworkAdapter.Wpf"
+        xmlns:my="clr-namespace:NetworkAdapter.Library;assembly=NetworkAdapter.Library"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="MainWindow" Height="500" Width="800" MinHeight="375" MinWidth="475">
 
+    <Grid>
+        <TabControl>
+
+            <!--Manual Tab-->
+            <TabItem Header="Manual">
+
+                <!--Base Grid-->
+                <Grid Background="#FFE5E5E5">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="4*"/>
+                        <RowDefinition Height="3*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+
+                    <!--Network Adapter ListView-->
+                    <ListView ItemsSource="{Binding adapterList}" x:Name="lvAdapters" Width="auto" Height="auto" SelectionChanged="LvAdapters_SelectionChanged">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Adapter Name" DisplayMemberBinding="{Binding Name}" Width="auto"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
+                    <Button Content="Refresh" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" Padding="3,0,3,0" Click="Button_RefreshManualListView"/>
+                    <CheckBox Grid.Column="1" Grid.Row="0" Content="Show All Adapters" HorizontalAlignment="Left" Margin="4,0,0,2" VerticalAlignment="Bottom" IsChecked="True" Checked="CheckBox_ShowAllAdapters_Checked" Unchecked="CheckBox_ShowAllAdapters_Unchecked" />
+                    
+                    <!--<CheckBox Grid.Column="1" Grid.Row="0" Content="Show Disabled Adapters" HorizontalAlignment="Left" Margin="4,6,0,40" VerticalAlignment="Bottom" IsChecked="True" Checked="CheckBox_ShowAllAdapters_Checked" Unchecked="CheckBox_ShowAllAdapters_Unchecked"/>
+                    <CheckBox Grid.Column="1" Grid.Row="0" Content="Show Virtual Adapters" HorizontalAlignment="Left" Margin="4,6,0,20" VerticalAlignment="Bottom" IsChecked="True" Checked="CheckBox_ShowAllAdapters_Checked" Unchecked="CheckBox_ShowAllAdapters_Unchecked"/>
+                    <CheckBox Grid.Column="1" Grid.Row="0" Content="Show Loopback Adapters" HorizontalAlignment="Left" Margin="4,6,0,0" VerticalAlignment="Bottom" IsChecked="True" Checked="CheckBox_ShowAllAdapters_Checked" Unchecked="CheckBox_ShowAllAdapters_Unchecked"/>-->
+
+                    <!--Exta Details-->
+                    <DockPanel Grid.ColumnSpan="2" Grid.RowSpan="2" Grid.Row="1">
+                        <!--<RichTextBox x:Name="rtbExraDetails" IsReadOnly="True" Width="auto"/>-->
+                        <TextBox x:Name="rtbExraDetails" IsReadOnly="True" Width="auto" TextWrapping="Wrap"/>
+                    </DockPanel>
+
+                    <!--DHCP or Static DockPanel-->
+                    <DockPanel Grid.Column="2" HorizontalAlignment="Right" Height="auto" VerticalAlignment="Top" Width="auto" Margin="0,20,27,0">
+                        <RadioButton Name="rUseDhcp" Content="Use DHCP" GroupName="Manual" Width="auto" DockPanel.Dock="Top" Checked="rUseDhcp_Checked_cbAutomaticDns_Enabled"/>
+                        <RadioButton Name="rStaticIp" Content="Static IP" GroupName="Manual" Width="auto" DockPanel.Dock="Top" Checked="rStaticIp_Checked_cbAutomaticDns_Disabled"/>
+                    </DockPanel>
+
+                    <!--IP Names DockPanel-->
+                    <DockPanel Grid.Column="2" HorizontalAlignment="Right" Height="auto" Margin="10,75,0,0" VerticalAlignment="Top" Width="auto">
+                        <TextBlock Text="IP Address:" TextWrapping="NoWrap" Width="auto" DockPanel.Dock="Top" Margin="0,4,5,6"/>
+                        <TextBlock Text="Subnet Mask:" TextWrapping="NoWrap" Width="auto" DockPanel.Dock="Top" Margin="0,5,5,6"/>
+                        <TextBlock Text="Default Gateway:" TextWrapping="NoWrap" Width="auto" DockPanel.Dock="Top" Margin="0,5,5,0"/>
+                    </DockPanel>
+
+                    <!--IP Text Field DockPanel-->
+                    <DockPanel Grid.Column="3" HorizontalAlignment="Left" Height="auto" Margin="10,70,0,0" VerticalAlignment="Top" Width="auto">
+                        <TextBox Name="tbIpAddress" Text="Select Adapter" MinWidth="95" MinHeight="21" MaxHeight="21" DockPanel.Dock="Top" Margin="0,5,5,2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="95"/>
+                        <TextBox Name="tbSubnetMask" Text="Select Adapter" MinWidth="95" MinHeight="21" MaxHeight="21" DockPanel.Dock="Top" Margin="0,5,5,2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="95"/>
+                        <TextBox Name="tbDefaultGateway" Text="Select Adapter" MinWidth="95" MinHeight="21" MaxHeight="21" DockPanel.Dock="Top" Margin="0,5,5,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="95"/>
+                    </DockPanel>
+
+
+                    <!--Dynamic or Static DNS DockPanel-->
+                    <DockPanel Grid.Column="2" Grid.Row="1" HorizontalAlignment="Right" Height="auto" VerticalAlignment="Top" Width="auto" Margin="0,20,0,0">
+                        <CheckBox Name="cbAutomaticDns" IsEnabled="True" Content="Automatic DNS" Width="auto" DockPanel.Dock="Top"/>
+                    </DockPanel>
+
+                    <!--DNS Names DockPanel-->
+                    <DockPanel Grid.Column="2" Grid.Row="1" HorizontalAlignment="Right" Height="auto" Margin="10,65,0,0" VerticalAlignment="Top" Width="auto">
+                        <TextBlock Text="Primary DNS:" TextWrapping="NoWrap" Width="auto" DockPanel.Dock="Top" Margin="0,4,5,6"/>
+                        <TextBlock Text="Secondary DNS:" TextWrapping="NoWrap" Width="auto" DockPanel.Dock="Top" Margin="0,5,5,6"/>
+                    </DockPanel>
+
+                    <!--IP Text Field DockPanel-->
+                    <DockPanel Grid.Column="3" Grid.Row="1" HorizontalAlignment="Left" Height="auto" Margin="10,60,0,0" VerticalAlignment="Top" Width="auto">
+                        <TextBox Name="tbPrimaryDns" Text="Select Adapter" MinWidth="95" MinHeight="21" MaxHeight="21" DockPanel.Dock="Top" Margin="0,5,5,2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="95"/>
+                        <TextBox Name="tbSecondaryDns" Text="Select Adapter" MinWidth="95" MinHeight="21" MaxHeight="21" DockPanel.Dock="Top" Margin="0,5,5,2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="95"/>
+                    </DockPanel>
+
+                    <Button Content="Save as Pre-Set" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,80,10" Padding="3,0,3,0" Grid.Column="3" Grid.Row="2"/>
+                    <Button Content="Apply" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,20,10" Padding="3,0,3,0" Grid.Column="3" Grid.Row="2" />
+
+
+                </Grid>
+            </TabItem>
+
+            <!--Ethernet Tab-->
+            <TabItem Header="Ethernet Pre-Set">
+                <Grid Background="#FFE5E5E5">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="9*"></ColumnDefinition>
+                        <ColumnDefinition Width="388*"/>
+                        <ColumnDefinition Width="397*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <RadioButton Content="Pre-Set1" HorizontalAlignment="Left" Margin="77,40,0,0" VerticalAlignment="Top" GroupName="Ethernet Pre-Set" Grid.Column="1"/>
+                    <RadioButton Content="Pre-Set2" HorizontalAlignment="Left" Margin="177,40,0,0" VerticalAlignment="Top" GroupName="Ethernet Pre-Set" Grid.Column="1"/>
+                    <Button Content="Apply" Grid.Column="2" HorizontalAlignment="Left" Margin="100,300,0,0" VerticalAlignment="Top"/>
+
+                </Grid>
+            </TabItem>
+
+
+            <!--WiFi Tab-->
+            <TabItem Header="WiFi Pre-Set">
+                <Grid Background="#FFE5E5E5">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <RadioButton Content="Pre-Set1" HorizontalAlignment="Left" Margin="86,40,0,0" VerticalAlignment="Top" GroupName="WiFi Pre-Set" Grid.Column="0"/>
+                    <RadioButton Content="Pre-Set2" HorizontalAlignment="Left" Margin="186,40,0,0" VerticalAlignment="Top" GroupName="WiFi Pre-Set" Grid.Column="0"/>
+                    <Button Content="Apply" Grid.Column="1" HorizontalAlignment="Left" Margin="100,300,0,0" VerticalAlignment="Top"/>
+
+                </Grid>
+            </TabItem>
+
+        </TabControl>
     </Grid>
 </Window>

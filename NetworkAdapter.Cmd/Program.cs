@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Net.Sockets;
 
 namespace NetworkAdapter.Cmd
 {
@@ -23,7 +24,7 @@ namespace NetworkAdapter.Cmd
             {
                 foreach (NetworkInterface nic in nics)
                 {
-                    var adapter = new NetworkAdapter.Library.NetworkAdapter(nic);
+                    var adapter = new Library.NetworkAdapter(nic);
                     if (adapter.Status == "Up")
                         Console.WriteLine(adapter.DisplayAdapterInfo());
                 }
@@ -32,15 +33,12 @@ namespace NetworkAdapter.Cmd
             {
                 foreach (NetworkInterface nic in nics)
                 {
-                    var adapter = new NetworkAdapter.Library.NetworkAdapter(nic);
+                    var adapter = new Library.NetworkAdapter(nic);
                     Console.WriteLine(adapter.DisplayAdapterInfo());
                 }
             }
         }
 
-        //public IEnumerable<NetworkAdapter.Library.NetworkAdapter> GetNetworkAdapters()
-        //{
 
-        //}
     }
 }
