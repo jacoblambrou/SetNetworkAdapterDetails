@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkAdapter.Cmd", "NetworkAdapter.Cmd\NetworkAdapter.Cmd.csproj", "{063A1D15-D238-4625-8B43-4019676CA831}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdapterConfigurator.Cmd", "AdapterConfigurator.Cmd\AdapterConfigurator.Cmd.csproj", "{063A1D15-D238-4625-8B43-4019676CA831}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkAdapter.Library", "NetworkAdapter.Interface\NetworkAdapter.Library.csproj", "{2260ACFE-E7AA-438B-9F86-D124109A1B44}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdapterConfigurator.Library.Test", "AdapterConfigurator.Library.Test\AdapterConfigurator.Library.Test.csproj", "{9AFD553C-B39C-41A6-9F51-3570D76A7B4F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkAdapter.Library.Test", "NetworkAdapter.Library.Test\NetworkAdapter.Library.Test.csproj", "{9AFD553C-B39C-41A6-9F51-3570D76A7B4F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdapterConfigurator.Wpf", "AdapterConfigurator.Wpf\AdapterConfigurator.Wpf.csproj", "{F34BD9C0-BAB1-4A5F-996F-1371BE1C5960}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkAdapter.Wpf", "NetworkAdapter.Wpf\NetworkAdapter.Wpf.csproj", "{F34BD9C0-BAB1-4A5F-996F-1371BE1C5960}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdapterConfigurator.Library", "AdapterConfigurator.Library\AdapterConfigurator.Library.csproj", "{97ABD581-4BB3-454E-888D-5D9AFB20C383}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +21,6 @@ Global
 		{063A1D15-D238-4625-8B43-4019676CA831}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{063A1D15-D238-4625-8B43-4019676CA831}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{063A1D15-D238-4625-8B43-4019676CA831}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2260ACFE-E7AA-438B-9F86-D124109A1B44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2260ACFE-E7AA-438B-9F86-D124109A1B44}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2260ACFE-E7AA-438B-9F86-D124109A1B44}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2260ACFE-E7AA-438B-9F86-D124109A1B44}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9AFD553C-B39C-41A6-9F51-3570D76A7B4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9AFD553C-B39C-41A6-9F51-3570D76A7B4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9AFD553C-B39C-41A6-9F51-3570D76A7B4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -33,6 +29,10 @@ Global
 		{F34BD9C0-BAB1-4A5F-996F-1371BE1C5960}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F34BD9C0-BAB1-4A5F-996F-1371BE1C5960}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F34BD9C0-BAB1-4A5F-996F-1371BE1C5960}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97ABD581-4BB3-454E-888D-5D9AFB20C383}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97ABD581-4BB3-454E-888D-5D9AFB20C383}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97ABD581-4BB3-454E-888D-5D9AFB20C383}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97ABD581-4BB3-454E-888D-5D9AFB20C383}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

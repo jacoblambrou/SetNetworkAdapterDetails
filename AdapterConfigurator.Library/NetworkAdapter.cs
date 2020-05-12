@@ -6,7 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace NetworkAdapter.Library
+namespace AdapterConfigurator.Library
 {
     public class NetworkAdapter /*: INetworkAdapter*/
     {

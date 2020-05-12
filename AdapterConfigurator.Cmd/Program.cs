@@ -1,11 +1,11 @@
-﻿using NetworkAdapter.Library;
+﻿using AdapterConfigurator.Library;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 
-namespace NetworkAdapter.Cmd
+namespace AdapterConfigurator.Cmd
 {
     class Program
     {
@@ -24,7 +24,7 @@ namespace NetworkAdapter.Cmd
             {
                 foreach (NetworkInterface nic in nics)
                 {
-                    var adapter = new Library.NetworkAdapter(nic);
+                    var adapter = new NetworkAdapter(nic);
                     if (adapter.Status == "Up")
                         Console.WriteLine(adapter.DisplayAdapterInfo());
                 }
@@ -33,7 +33,7 @@ namespace NetworkAdapter.Cmd
             {
                 foreach (NetworkInterface nic in nics)
                 {
-                    var adapter = new Library.NetworkAdapter(nic);
+                    var adapter = new NetworkAdapter(nic);
                     Console.WriteLine(adapter.DisplayAdapterInfo());
                 }
             }

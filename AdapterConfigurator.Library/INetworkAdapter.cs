@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
 
-namespace NetworkAdapter.Library
+namespace AdapterConfigurator.Library
 {
     public interface INetworkAdapter
     {

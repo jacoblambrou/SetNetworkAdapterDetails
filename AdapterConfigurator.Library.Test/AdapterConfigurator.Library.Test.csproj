@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NetworkAdapter.Interface\NetworkAdapter.Library.csproj" />
+    <ProjectReference Include="..\AdapterConfigurator.Library\AdapterConfigurator.Library.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,7 @@
-﻿<Application x:Class="NetworkAdapter.Wpf.App"
+﻿<Application x:Class="AdapterConfigurator.Wpf.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:NetworkAdapter.Wpf"
+             xmlns:local="clr-namespace:AdapterConfigurator.Wpf"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          

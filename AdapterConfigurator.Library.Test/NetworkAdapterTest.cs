@@ -1,10 +1,10 @@
-using NetworkAdapter.Library;
+using AdapterConfigurator.Library;
 using System;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using Xunit;
 
-namespace NetworkAdapter.Library.Tests
+namespace AdapterConfigurator.Library.Tests
 {
     public class NetworkAdapterTest
     {
