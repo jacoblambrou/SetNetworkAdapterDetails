@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AdapterConfigurator.Wpf"
-        xmlns:my="clr-namespace:AdapterConfigurator.Library;assembly=NetworkAdapter.Library"
+        xmlns:my="clr-namespace:AdapterConfigurator.Library;assembly=AdapterConfigurator.Library"
         mc:Ignorable="d"
         Title="MainWindow" Height="500" Width="800" MinHeight="375" MinWidth="475">
 
@@ -53,8 +53,8 @@
 
                     <!--DHCP or Static DockPanel-->
                     <DockPanel Grid.Column="2" HorizontalAlignment="Right" Height="auto" VerticalAlignment="Top" Width="auto" Margin="0,20,27,0">
-                        <RadioButton Name="rUseDhcp" Content="Use DHCP" GroupName="Manual" Width="auto" DockPanel.Dock="Top" Checked="rUseDhcp_Checked_cbAutomaticDns_Enabled"/>
-                        <RadioButton Name="rStaticIp" Content="Static IP" GroupName="Manual" Width="auto" DockPanel.Dock="Top" Checked="rStaticIp_Checked_cbAutomaticDns_Disabled"/>
+                        <RadioButton Name="rUseDhcp" Content="Use DHCP" GroupName="Manual" Width="auto" DockPanel.Dock="Top" Checked="rUseDhcp_Checked_cbAutomaticDns_Enabled_TextFields_Disabled"/>
+                        <RadioButton Name="rStaticIp" Content="Static IP" GroupName="Manual" Width="auto" DockPanel.Dock="Top" Checked="rStaticIp_Checked_cbAutomaticDns_Disabled_TextFields_Enabled"/>
                     </DockPanel>
 
                     <!--IP Names DockPanel-->

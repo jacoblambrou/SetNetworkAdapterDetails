@@ -38,7 +38,5 @@ namespace AdapterConfigurator.Cmd
                 }
             }
         }
-
-
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Management;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
@@ -21,8 +22,9 @@ namespace AdapterConfigurator.Library
         public string PrimaryDns { get; set; } = string.Empty;
         public string SecondaryDns { get; set; } = string.Empty;
         public bool DhcpStatus { get; set; } = true;
-        public string DhcpServerAddress { get; set; } = string.Empty;
+        public string? DhcpServerAddress { get; set; }
         public string MacAddress { get; set; } = string.Empty;
+        public uint? Index { get; set; }
 
         public NetworkAdapter()
         {
@@ -44,6 +46,7 @@ namespace AdapterConfigurator.Library
             this.DhcpServerAddress = GetDhcpServerAddress(nic);
             this.Id = GetAdapterId(nic);
             this.MacAddress = GetMacAddress(nic);
+            this.Index = GetIndex(nic);
         }
 
         public string GetAdapterId(NetworkInterface nic)
@@ -107,7 +110,7 @@ namespace AdapterConfigurator.Library
             return "Not set";
         }
 
-        public List<string> GetDnsServers(NetworkInterface nic)
+        public string[] GetDnsServers(NetworkInterface nic)
         {
             //string dnsServers = string.Empty;
             List<string> dnsServers = new List<string>();
@@ -118,13 +121,13 @@ namespace AdapterConfigurator.Library
             }
             if (dnsServers.Count > 1)      // Check if DNS server(s) exist
             {
-                return dnsServers;
+                return dnsServers.ToArray();
             }
             while (dnsServers.Count < 2)
             {
                 dnsServers.Add("Not Set");
             }
-            return dnsServers;
+            return dnsServers.ToArray();
         }
 
         public bool GetDhcpStatus(NetworkInterface nic)
@@ -133,7 +136,7 @@ namespace AdapterConfigurator.Library
 
         }
 
-        public string GetDhcpServerAddress(NetworkInterface nic)
+        public string? GetDhcpServerAddress(NetworkInterface nic)
         {
             var dhcpServer = nic.GetIPProperties().DhcpServerAddresses;
             if (dhcpServer.Count < 1)
@@ -148,10 +151,22 @@ namespace AdapterConfigurator.Library
             return Regex.Replace(mac,".{2}","$0-").Trim('-');       // Insert - every 2 characters, then trim - from either end
         }
 
-        
+        public uint? GetIndex(NetworkInterface nic)
+        {
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher("Select * From Win32_NetworkAdapter");
+            foreach (ManagementObject adapter in searcher.Get())
+            {
+                if (adapter["Guid"]?.ToString() == GetAdapterId(nic))
+                    return Convert.ToUInt32(adapter["Index"]);
+            }
+            return null;
+        }
+
+
         public string DisplayAdapterInfo()
         {
             StringBuilder adapterBuilder = new StringBuilder();
+            adapterBuilder.Append($"Index . . . . . . . . . : {Index}\r\n");
             adapterBuilder.Append($"Name. . . . . . . . . . : {Name}\r\n");
             adapterBuilder.Append($"Description . . . . . . : {Description}\r\n");
             adapterBuilder.Append($"Type. . . . . . . . . . : {Type}\r\n");
@@ -161,7 +176,6 @@ namespace AdapterConfigurator.Library
             adapterBuilder.Append($"Default Gateway . . . . : {DefaultGateway}\r\n");
             adapterBuilder.Append($"Primary DNS . . . . . . : {PrimaryDns}\r\n");
             adapterBuilder.Append($"Secondary DNS . . . . . : {SecondaryDns}\r\n");
-            adapterBuilder.Append($"DHCP Enabled. . . . . . : {DhcpStatus}\r\n");
             adapterBuilder.Append($"DHCP Server Address . . : {DhcpServerAddress}\r\n");
             adapterBuilder.Append($"MAC Address . . . . . . : {MacAddress}\r\n"); 
             adapterBuilder.Append($"Id. . . . . . . . . . . : {Id}\r\n");
