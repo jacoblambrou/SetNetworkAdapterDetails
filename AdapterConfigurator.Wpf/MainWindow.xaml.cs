@@ -26,7 +26,8 @@ namespace AdapterConfigurator.Wpf
     {
         private bool ShowAll;
         private bool AdapterIsSelected = false;
-        private uint Index;
+        private uint SelectedIndex;
+        private string SelectedGuid;
 
 
         //private bool ShowDisconnected;
@@ -70,9 +71,13 @@ namespace AdapterConfigurator.Wpf
 
         private void RefreshManualListView()
         {
+            rtbLastRefreshed.Clear();
+            rtbLastRefreshed.Text = "Refreshing...";
             adapterCollection.Clear();
             adapterCollection = AddAdaptersToCollection(ShowAll);
             lvAdapters.ItemsSource = adapterCollection;
+            rtbLastRefreshed.Clear();
+            rtbLastRefreshed.Text = $"Last refreshed at: {DateTime.Now.ToLongTimeString()}";
         }
 
         private void Button_Refresh_ManualListView(object sender, RoutedEventArgs e)
@@ -104,7 +109,7 @@ namespace AdapterConfigurator.Wpf
                 rtbExraDetails.Clear();     // Clear existing info from TextBox
 
                 // Print Extra Details to TextBox
-                rtbExraDetails.AppendText($"Index\t\t{selectedAdapter.Index}\r\nDescription:\t{selectedAdapter.Description}\r\nType:\t\t{selectedAdapter.Type}\r\nStatus:\t\t{selectedAdapter.Status}\r\nDHCP Server:\t{selectedAdapter.DhcpServerAddress}\r\nMAC Address:\t{selectedAdapter.MacAddress}\r\nGUID:\t\t{selectedAdapter.Id}\r\n{selectedAdapter.Index}");
+                rtbExraDetails.AppendText($"Index\t\t{selectedAdapter.Index}\r\nDescription:\t{selectedAdapter.Description}\r\nType:\t\t{selectedAdapter.Type}\r\nStatus:\t\t{selectedAdapter.Status}\r\nDHCP Server:\t{selectedAdapter.DhcpServerAddress}\r\nMAC Address:\t{selectedAdapter.MacAddress}\r\nGUID:\t\t{selectedAdapter.Guid}");
                 
                 // Print properties to relevant TextBoxes
                 tbIpAddress.Text = selectedAdapter.IpAddress;
@@ -119,8 +124,15 @@ namespace AdapterConfigurator.Wpf
                 else
                     rStaticIp.IsChecked = true;
 
+                // Tick/Untick Automatic DNS
+                if (selectedAdapter.DnsStatus)
+                    cbAutomaticDns.IsChecked = true;
+                else
+                    cbAutomaticDns.IsChecked = false;
+
                 AdapterIsSelected = true;
-                this.Index = Convert.ToUInt32(selectedAdapter.Index);
+                this.SelectedIndex = Convert.ToUInt32(selectedAdapter.Index);
+                this.SelectedGuid = selectedAdapter.Guid;
 
             }
         }
@@ -169,26 +181,51 @@ namespace AdapterConfigurator.Wpf
 
         public void Button_Apply_UpdateSelectedAdapterSettings(object sender, RoutedEventArgs e)
         {
-            //TODO: Check if adapter has been selected
             if (AdapterIsSelected)
             {
+                // TODO: Generate method to extract details
+                string ipAddress = tbIpAddress.Text;
+                string subnetMask = tbSubnetMask.Text;
+                string gw = tbDefaultGateway.Text;
+                string receivedPrimaryDns = tbPrimaryDns.Text;
+                string receivedSecondaryDns = tbSecondaryDns.Text;
+
+                string primaryDns = null;
+                string secondaryDns = null;
+
+                if (!string.IsNullOrWhiteSpace(receivedPrimaryDns))
+                    primaryDns = receivedPrimaryDns;
+
+                if (!string.IsNullOrWhiteSpace(receivedSecondaryDns))
+                    secondaryDns = receivedSecondaryDns;
+
                 if (rStaticIp.IsChecked ?? false)
                 {
-                    string ipAddress = tbIpAddress.ToString().Replace("System.Windows.Controls.TextBox: ", "");
-                    string subnetMask = tbSubnetMask.ToString().Replace("System.Windows.Controls.TextBox: ", "");
-                    string gw = tbDefaultGateway.ToString().Replace("System.Windows.Controls.TextBox: ", "");
-                    EnableStaticDetails.SetStaticIP(ipAddress, subnetMask, gw, Index);
+                    
+
+                    EnableStaticDetails.SetStaticIP(ipAddress, subnetMask, gw, SelectedIndex);
+                    EnableStaticDetails.SetNameServers(primaryDns, secondaryDns, SelectedIndex, SelectedGuid);
                 }
                 else if (rUseDhcp.IsChecked ?? false)
                 {
-                    //TODO: SetDynamicIp();
+                    EnableDynamicDetails.SetDynamicIp(SelectedIndex, SelectedGuid);
 
                     if (cbAutomaticDns.IsChecked ?? false)
                     {
-                        //TODO: SetAutomaticDns();
+                        EnableDynamicDetails.SetDynamicDns(SelectedIndex, SelectedGuid);
+                    }
+                    else
+                    {
+                        EnableStaticDetails.SetNameServers(primaryDns, secondaryDns, SelectedIndex, SelectedGuid);
                     }
                 }
             }
+            else
+            {
+                // TODO: "Please select an adapter"
+            }
+
+            Button_Refresh_ManualListView(sender, e);
         }
     }
 }

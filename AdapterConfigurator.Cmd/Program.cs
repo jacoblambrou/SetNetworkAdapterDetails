@@ -28,6 +28,9 @@ namespace AdapterConfigurator.Cmd
                     if (adapter.Status == "Up")
                         Console.WriteLine(adapter.DisplayAdapterInfo());
                 }
+
+                Console.WriteLine("Press any key to exit");
+                Console.Read();
             }
             else
             {
@@ -36,6 +39,9 @@ namespace AdapterConfigurator.Cmd
                     var adapter = new NetworkAdapter(nic);
                     Console.WriteLine(adapter.DisplayAdapterInfo());
                 }
+
+                Console.WriteLine("Press any key to exit");
+                Console.Read();
             }
         }
     }

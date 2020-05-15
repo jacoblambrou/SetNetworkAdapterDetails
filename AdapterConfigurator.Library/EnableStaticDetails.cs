@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Linq;
 using System.Management;
+using System.Net;
 
 namespace AdapterConfigurator.Library
 {
@@ -22,7 +24,7 @@ namespace AdapterConfigurator.Library
             {
                 using (var networkConfigs = networkConfigMngr.GetInstances())
                 {
-                    foreach (var managementObject in networkConfigs.Cast<ManagementObject>().Where(managementObject => (uint)managementObject["Index"] == index))
+                    foreach (var managementObject in networkConfigs.Cast<ManagementObject>().Where(managementObject => (bool)managementObject["IPEnabled"] && (uint)managementObject["Index"] == index))
                     {
                         using (var newIP = managementObject.GetMethodParameters("EnableStatic"))
                         {
@@ -64,22 +66,43 @@ namespace AdapterConfigurator.Library
         /// <param name="nic">NIC address</param>
         /// <param name="dnsServers">Comma seperated list of DNS server addresses</param>
         /// <remarks>Requires a reference to the System.Management namespace</remarks>
-        public static void SetNameServers(string nic, string dnsServers)
+        public static void SetNameServers(string primaryDns, string secondaryDns, uint index, string guid)
         {
-            using (var networkConfigMng = new ManagementClass("Win32_NetworkAdapterConfiguration"))
+            using (var networkConfigMngr = new ManagementClass("Win32_NetworkAdapterConfiguration"))
             {
-                using (var networkConfigs = networkConfigMng.GetInstances())
+                using (var networkConfigs = networkConfigMngr.GetInstances())
                 {
-                    foreach (var managementObject in networkConfigs.Cast<ManagementObject>().Where(objMO => (bool)objMO["IPEnabled"] && objMO["Caption"].Equals(nic)))
+                    foreach (var managementObject in networkConfigs.Cast<ManagementObject>().Where(managementObject => (bool)managementObject["IPEnabled"] && (uint)managementObject["Index"] == index))
                     {
                         using (var newDNS = managementObject.GetMethodParameters("SetDNSServerSearchOrder"))
                         {
-                            newDNS["DNSServerSearchOrder"] = dnsServers.Split(',');
-                            managementObject.InvokeMethod("SetDNSServerSearchOrder", newDNS, null);
+                            if (string.IsNullOrWhiteSpace(primaryDns) || string.IsNullOrWhiteSpace(secondaryDns))
+                            {
+                                SetNameServersToNull(guid);
+                            }
+
+                            try
+                            {
+                                string path = @$"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\{guid}";
+                                string dnsServers = $"{primaryDns},{secondaryDns}".Trim(',');
+                                
+                                Registry.SetValue(path, "NameServer", dnsServers);
+                            }
+                            catch (Exception)
+                            {
+                                // TODO: MessageBox.Show("Preferred DNS set failed");
+
+                            }
                         }
                     }
                 }
             }
+        }
+
+        public static void SetNameServersToNull(string guid)
+        {
+            string path = @$"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\{guid}";
+            Registry.SetValue(path, "NameServer", "");
         }
     }
 }
