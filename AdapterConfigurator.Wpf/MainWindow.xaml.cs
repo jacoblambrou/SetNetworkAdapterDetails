@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -26,16 +27,15 @@ namespace AdapterConfigurator.Wpf
     {
         private bool ShowAll;
         private bool AdapterIsSelected = false;
+        private int? ListViewSelectedAdapter;
         private uint SelectedIndex;
         private string SelectedGuid;
-
+        private ObservableCollection<NetworkAdapter> adapterCollection = new ObservableCollection<NetworkAdapter>();
 
         //private bool ShowDisconnected;
         //private bool ShowDisabled;
         //private bool ShowVirtual;
         //private bool ShowLoopback;
-
-        private ObservableCollection<Library.NetworkAdapter> adapterCollection = new ObservableCollection<Library.NetworkAdapter>();
 
         public MainWindow()
         {
@@ -44,7 +44,7 @@ namespace AdapterConfigurator.Wpf
 
 
         
-        public ObservableCollection<Library.NetworkAdapter> AddAdaptersToCollection(bool showConnectedOnly = false)
+        public ObservableCollection<NetworkAdapter> AddAdaptersToCollection(bool showConnectedOnly = false)
         {
             NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
 
@@ -53,20 +53,22 @@ namespace AdapterConfigurator.Wpf
 
                 foreach (NetworkInterface nic in nics)
                 {
-                    var adapter = new Library.NetworkAdapter(nic);
+                    var adapter = new NetworkAdapter(nic);
                     if (adapter.Status == "Up" && adapter.Type != "Loopback" && !adapter.Description.Contains("Bluetooth Device") && !adapter.Description.Contains("Virtual Adapter"))
                         adapterCollection.Add(adapter);
                 }
                 return adapterCollection;
             }
-            
-            foreach (NetworkInterface nic in nics)
+            else
             {
-                var adapter = new Library.NetworkAdapter(nic);
-                if (adapter.Type != "Loopback" && !adapter.Description.Contains("Bluetooth Device") && !adapter.Description.Contains("Virtual Adapter"))
-                    adapterCollection.Add(adapter);
+                foreach (NetworkInterface nic in nics)
+                {
+                    var adapter = new NetworkAdapter(nic);
+                    if (adapter.Type != "Loopback" && !adapter.Description.Contains("Bluetooth Device") && !adapter.Description.Contains("Virtual Adapter"))
+                        adapterCollection.Add(adapter);
+                }
+                return adapterCollection;
             }
-            return adapterCollection;
         }
 
         private void RefreshManualListView()
@@ -83,6 +85,11 @@ namespace AdapterConfigurator.Wpf
         private void Button_Refresh_ManualListView(object sender, RoutedEventArgs e)
         {
             RefreshManualListView();
+            if (ListViewSelectedAdapter.HasValue)                       // If adapter is selected, retain selection after refresh
+            {
+                int i = ListViewSelectedAdapter.Value;
+                lvAdapters.SelectedItem = adapterCollection[i];
+            }
         }
 
         
@@ -104,7 +111,7 @@ namespace AdapterConfigurator.Wpf
             if (e.AddedItems.Count > 0)
             {
 
-                Library.NetworkAdapter selectedAdapter = FindSelectedAdapter(e);
+                NetworkAdapter selectedAdapter = FindSelectedAdapter(e);
 
                 rtbExraDetails.Clear();     // Clear existing info from TextBox
 
@@ -131,9 +138,9 @@ namespace AdapterConfigurator.Wpf
                     cbAutomaticDns.IsChecked = false;
 
                 AdapterIsSelected = true;
-                this.SelectedIndex = Convert.ToUInt32(selectedAdapter.Index);
-                this.SelectedGuid = selectedAdapter.Guid;
-
+                SelectedIndex = Convert.ToUInt32(selectedAdapter.Index);
+                SelectedGuid = selectedAdapter.Guid;
+                ListViewSelectedAdapter = adapterCollection.IndexOf(selectedAdapter);
             }
         }
 
@@ -169,13 +176,13 @@ namespace AdapterConfigurator.Wpf
         /// </summary>
         /// <param name="e"></param>
         /// <returns></returns>
-        public Library.NetworkAdapter FindSelectedAdapter(SelectionChangedEventArgs e)
+        public NetworkAdapter FindSelectedAdapter(SelectionChangedEventArgs e)
         {
             //if (e.AddedItems.Count < 1)
                 //TODO: Please select an adapter
 
             string adapterName = e.AddedItems[0]?.ToString();
-            Library.NetworkAdapter selectedAdapter = adapterCollection.Where(x => x.Name == adapterName).FirstOrDefault();
+            NetworkAdapter selectedAdapter = adapterCollection.Where(x => x.Name == adapterName).FirstOrDefault();
             return selectedAdapter;
         }
 
@@ -222,10 +229,12 @@ namespace AdapterConfigurator.Wpf
             }
             else
             {
-                // TODO: "Please select an adapter"
+                System.Windows.MessageBox.Show("Please select an adapter", "Select an Adapter", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             Button_Refresh_ManualListView(sender, e);
+            
+            // TODO: Regain focus on previously selected adapter from ListView
         }
     }
 }
