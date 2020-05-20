@@ -213,7 +213,7 @@ namespace AdapterConfigurator.Wpf
                 }
                 else if (rUseDhcp.IsChecked ?? false)
                 {
-                    EnableDynamicDetails.SetDynamicIp(SelectedIndex, SelectedGuid);
+                    EnableDynamicDetails.SetDynamicIp(SelectedIndex, SelectedGuid, gw);
 
                     if (cbAutomaticDns.IsChecked ?? false)
                     {

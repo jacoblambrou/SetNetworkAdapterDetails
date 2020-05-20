@@ -44,9 +44,11 @@
                         <TextBox Grid.Column="1" HorizontalAlignment="Left" Margin="10,35,0,0" Text="Last Refreshed At:" TextWrapping="Wrap" VerticalAlignment="Top" Width="auto" Padding="3,1,3,1" x:Name="rtbLastRefreshed" IsReadOnly="True" Grid.ColumnSpan="2"/>
                     </DockPanel>
 
-                    
-                        <CheckBox Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" Content="Show All Adapters" HorizontalAlignment="Left" Margin="4,0,0,2" VerticalAlignment="Bottom" IsChecked="True" Checked="CheckBox_ShowAllAdapters_Checked" Unchecked="CheckBox_ShowAllAdapters_Unchecked" />
-                    
+                    <Slider Grid.Column="1" HorizontalAlignment="Left" Margin="10,70,0,0" VerticalAlignment="Top" Width="30"/>
+
+
+                    <CheckBox Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" Content="Show All Adapters" HorizontalAlignment="Left" Margin="4,0,0,2" VerticalAlignment="Bottom" IsChecked="True" Checked="CheckBox_ShowAllAdapters_Checked" Unchecked="CheckBox_ShowAllAdapters_Unchecked" />
+
 
                     <!--<CheckBox Grid.Column="1" Grid.Row="0" Content="Show Disabled Adapters" HorizontalAlignment="Left" Margin="4,6,0,40" VerticalAlignment="Bottom" IsChecked="True" Checked="CheckBox_ShowAllAdapters_Checked" Unchecked="CheckBox_ShowAllAdapters_Unchecked"/>
                     <CheckBox Grid.Column="1" Grid.Row="0" Content="Show Virtual Adapters" HorizontalAlignment="Left" Margin="4,6,0,20" VerticalAlignment="Bottom" IsChecked="True" Checked="CheckBox_ShowAllAdapters_Checked" Unchecked="CheckBox_ShowAllAdapters_Unchecked"/>
@@ -98,6 +100,8 @@
 
                     <Button Content="Save as Pre-Set" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,80,10" Padding="3,0,3,0" Grid.Column="3" Grid.Row="2"/>
                     <Button Name="bApply" Content="Apply" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,20,10" Padding="3,0,3,0" Grid.Column="3" Grid.Row="2" Click="Button_Apply_UpdateSelectedAdapterSettings"/>
+                    
+
 
                 </Grid>
             </TabItem>
